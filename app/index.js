@@ -251,8 +251,7 @@ export default class InfiniteScroll extends Component {
         className="infinite-scroll-component"
         ref={infScroll => (this._infScroll = infScroll)}
         style={style}
-      >
-        {this.props.pullDownToRefresh && (
+      >{this.props.pullDownToRefresh && (
           <tr
             style={{ position: "relative" }}
             ref={pullDown => (this._pullDown = pullDown)}
