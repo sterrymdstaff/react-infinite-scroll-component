@@ -51,12 +51,12 @@ export default class Height extends React.Component {
     let count = this.state.divs.length;
     for (let i = 0; i < 30; i++) {
       moreDivs.push(
-        <div
+        <tr
           key={"div" + count++}
           style={{ height: 200, background: colors[i % 4], ...style }}
         >
-          Div no {count}
-        </div>
+          <td>Div no {count}</td>
+        </tr>
       );
     }
     setTimeout(() => {
@@ -68,19 +68,21 @@ export default class Height extends React.Component {
     return (
       <div>
         <h3>{heightMessage}</h3>
-        <InfiniteScroll
-          next={this.generateDivs}
-          hasMore={true}
-          height={300}
-          containerElement="table"
-          loader={
-            <tr>
-              <td>Loading...</td>
-            </tr>
-          }
-        >
-          {this.state.divs}
-        </InfiniteScroll>
+        <table>
+          <InfiniteScroll
+            next={this.generateDivs}
+            hasMore={true}
+            height={300}
+            containerElement="tbody"
+            loader={
+              <tr>
+                <td>Loading...</td>
+              </tr>
+            }
+          >
+            {this.state.divs}
+          </InfiniteScroll>
+        </table>
       </div>
     );
   }

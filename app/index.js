@@ -204,7 +204,9 @@ export default class InfiniteScroll extends Component {
       this.props.hasChildren ||
       !!(this.props.children && this.props.children.length);
 
-    return (
+    return ContainerElement === "tbody" ? (
+      this.renderTableContent(ContainerElement, style, hasChildren)
+    ) : (
       <div style={outerDivStyle}>
         <div
           className="infinite-scroll-component"
@@ -231,11 +233,7 @@ export default class InfiniteScroll extends Component {
               </div>
             </div>
           )}
-          {ContainerElement ? (
-            <ContainerElement>{this.props.children}</ContainerElement>
-          ) : (
-            this.props.children
-          )}
+          {this.props.children}
           {!this.state.showLoader &&
             !hasChildren &&
             this.props.hasMore &&
@@ -244,6 +242,44 @@ export default class InfiniteScroll extends Component {
           {!this.props.hasMore && this.props.endMessage}
         </div>
       </div>
+    );
+  }
+
+  renderTableContent(ContainerElement, style, hasChildren) {
+    return (
+      <ContainerElement
+        className="infinite-scroll-component"
+        ref={infScroll => (this._infScroll = infScroll)}
+        style={style}
+      >
+        {this.props.pullDownToRefresh && (
+          <tr
+            style={{ position: "relative" }}
+            ref={pullDown => (this._pullDown = pullDown)}
+          >
+            <td
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: -1 * this.maxPullDownDistance
+              }}
+            >
+              {!this.state.pullToRefreshThresholdBreached &&
+                this.props.pullDownToRefreshContent}
+              {this.state.pullToRefreshThresholdBreached &&
+                this.props.releaseToRefreshContent}
+            </td>
+          </tr>
+        )}
+        {this.props.children}
+        {!this.state.showLoader &&
+          !hasChildren &&
+          this.props.hasMore &&
+          this.props.loader}
+        {this.state.showLoader && this.props.loader}
+        {!this.props.hasMore && this.props.endMessage}
+      </ContainerElement>
     );
   }
 }
