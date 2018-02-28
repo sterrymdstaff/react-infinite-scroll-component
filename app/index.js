@@ -184,7 +184,7 @@ export default class InfiniteScroll extends Component {
   }
 
   render() {
-    const { containerElement: ContainerElement } = this.props;
+    const { containerElement: ContainerElement, onRef } = this.props;
 
     // because heighted infiniteScroll visualy breaks
     // on drag down as overflow becomes visible
@@ -205,9 +205,9 @@ export default class InfiniteScroll extends Component {
       !!(this.props.children && this.props.children.length);
 
     return ContainerElement === "tbody" ? (
-      this.renderTableContent(ContainerElement, style, hasChildren)
+      this.renderTableContent(ContainerElement, style, hasChildren, onRef)
     ) : (
-      <div style={outerDivStyle}>
+      <div ref={onRef} style={outerDivStyle}>
         <div
           className="infinite-scroll-component"
           ref={infScroll => (this._infScroll = infScroll)}
@@ -245,13 +245,17 @@ export default class InfiniteScroll extends Component {
     );
   }
 
-  renderTableContent(ContainerElement, style, hasChildren) {
+  renderTableContent(ContainerElement, style, hasChildren, onRef) {
     return (
       <ContainerElement
         className="infinite-scroll-component"
-        ref={infScroll => (this._infScroll = infScroll)}
+        ref={infScroll => {
+          this._infScroll = infScroll;
+          onRef(infScroll);
+        }}
         style={style}
-      >{this.props.pullDownToRefresh && (
+      >
+        {this.props.pullDownToRefresh && (
           <tr
             style={{ position: "relative" }}
             ref={pullDown => (this._pullDown = pullDown)}
